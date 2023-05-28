@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="withns">
+    <insert id="insertCheck" parameterType="with">
+        insert into withgo
+        (with_no,user_no,with_title,with_content,with_maxto,with_tag,with_hit,
+        with_category,with_age,with_start,with_end,with_date,with_filename)
+
+        values
+        (withgo_seq.nextval,#{user_no},#{with_title},#{with_content},#{with_maxto},#{with_tag},1,
+        #{with_category},#{with_age},#{with_start},#{with_end},sysdate,#{with_filename, jdbcType=VARCHAR})
+    </insert>
+
+    <!-- 게시물 총 개수 구하기 -->
+    <select id="with_count" resultType="int">
+        select count(*) from withgo
+    </select>
+
+    <!-- 게시판 목록 -->
+    <select id="with_list" parameterType="int" resultType="with">
+        <![CDATA[
+		select * from (select rownum rnum, with1.* from
+		(select * from withgo order by with_no desc) with1)
+		where rnum >= ((#{page}-1) * 8 + 1)  and rnum <= (#{page} * 8)
+		]]>
+    </select>
+
+    <!-- 게시판 내용보기 -->
+    <select id="with_detail" parameterType="int" resultType="with">
+        select * from withgo where with_no = #{with_no}
+    </select>
+
+    <!-- 게시판 조회수 증가 -->
+    <update id="hit" parameterType="int">
+        update withgo set with_hit = with_hit + 1 where with_no = #{with_no}
+    </update>
+
+    <!-- 동행 신청 -->
+    <insert id="reserve" parameterType="reserve">
+        insert into reserve values (reserve_seq.nextval, #{with_no}, sysdate, #{user_no})
+    </insert>
+</mapper>

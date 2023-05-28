@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.example.goSeoul.dao.InfoDao">
+
+	<!-- <select id="member" parameterType="String" resultType="org.example.goSeoul.dto.MemberDTO"> 
+		select * from member_user where id = #{id} </select> -->
+
+	<!-- 회원정보 상세 -->
+	<select id="getInfo" parameterType="String"
+		resultType="member">
+		SELECT * FROM
+		userdata where id = #{id}
+	</select>
+
+	<!-- 회원 정보 수정 -->
+	<update id="postEdit">
+		UPDATE userdata
+		SET
+		id = #{id},
+		pass = #{pass},
+		nick = #{nick},
+		tel2 = #{tel2},
+		tel3 = #{tel3},
+		email = #{email},
+		domain = #{domain},
+		region = #{region},
+		MBTI = #{MBTI}
+		WHERE id = #{id}
+	</update>
+
+	<!-- 닉네임 중복 체크 -->
+	<!-- <select id="nick_check" parameterType="String" resultType="member"> 
+		select * from userdata where nick=#{nick} </select> <select id="email_check" 
+		parameterType="String" resultType="member"> select * from userdata where 
+		email=#{email} </select> -->
+
+	<!-- 회원 탈퇴1 -->
+	<delete id="delete">
+		DELETE FROM userdata
+		WHERE id = #{id}
+	</delete>
+	<!-- 회원 탈퇴2 <update id="member_delete" parameterType="member"> update member 
+		set member_del = 1 where id = #{id} </update> -->
+
+	<!-- 로그인 인증 -->
+	<!-- <select id="login_check" parameterType="String" resultType="member"> 
+		select * from userdata where id=#{id} and member_del=0 </select> -->
+
+
+</mapper>

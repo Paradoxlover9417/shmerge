@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.example.goSeoul.dao.JoinDao">
+
+    <!-- 회원저장 -->
+    <insert id="insertMember" parameterType="member"> <!-- id = dao인터페이스 메소드 이름 -->
+        insert into userdata (user_no, id, nick, pass, name, birth,
+        tel1, tel2, tel3, email, domain, region, gender, MBTI, interests, intro, file_name, file_path)
+        values(userdata_seq.nextval, #{id}, #{nick}, #{pass}, #{name}, #{birth},
+        #{tel1}, #{tel2}, #{tel3}, #{email}, #{domain}, #{region}, #{gender}, #{MBTI}, #{interests}, #{intro}, #{file_name, jdbcType=VARCHAR}, #{file_path, jdbcType=VARCHAR})
+    </insert>
+
+    <!-- 로그인 인증 + 아이디 중복 체크 -->
+    <select id="id_check" parameterType="String" resultType="member">
+	<!-- select * from member_user where id=#{id} and join_state=1-->
+        select * from userdata where id=#{id}
+    </select>
+
+    <!-- 닉네임 중복 체크 -->
+    <select id="nick_check" parameterType="String" resultType="member">
+        select * from userdata where nick=#{nick}
+    </select>
+
+</mapper>

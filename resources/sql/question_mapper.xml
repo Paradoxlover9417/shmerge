@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="questionns">
+    <insert id="questionInsert" parameterType="question">
+        insert into question
+        (q_no,user_no,q_title,q_content,q_category)
+        values
+        (question_seq.nextval,#{user_no},#{q_title},#{q_content},#{q_category})
+    </insert>
+</mapper>
