@@ -12,7 +12,7 @@
 	<c:if test="${result == 1}">
 		<script>
 			alert("수정 성공");
-			location.href = "freeList.do?pageNum=${pageNum}";
+			location.href = "freeContent.do?num=${freeBean.free_no}&pageNum=${pageNum}";
 		</script>
 	</c:if>
 	<c:if test="${result != 1}">

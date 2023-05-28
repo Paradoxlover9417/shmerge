@@ -9,6 +9,7 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<input type="hidden" name="pageNum" value="${pageNum}">	
 	<c:if test="${result == 1}">
 		<script>
 			alert("삭제 성공");

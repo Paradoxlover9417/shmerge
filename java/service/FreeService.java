@@ -38,9 +38,9 @@ public class FreeService {
 	}
 	
 	// 글 삭제
-	public int freeDelete(int num) throws Exception {
+	public int freeDelete(FreeBean fb) throws Exception {
 		System.out.println("FreeService_freeDelete");
-		return freeDao.freeDelete(num);
+		return freeDao.freeDelete(fb);
 	}
 	
 	// public List<Board> list(int startRow, int endRow) {
@@ -53,7 +53,7 @@ public class FreeService {
 			return freeDao.getTotal(fb);
 		}
 		
-		public int freeLikeUpdate(int free_no) {
+	 	public int freeLikeUpdate(int free_no) {
 	 		return freeDao.freeLikeUpdate(free_no);
 	 	}
 	 	

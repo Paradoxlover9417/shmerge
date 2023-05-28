@@ -1,7 +1,9 @@
 package org.example.goSeoul.controller;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,8 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 public class FreeController {
@@ -30,7 +33,6 @@ public class FreeController {
     // 리스트
     @RequestMapping("freeList.do")
 	public String list(String pageNum, FreeBean fb, Model model) {
-		System.out.println("controller list");
 		System.out.println("search:" + fb.getSearch());
 		System.out.println("keyword:" + fb.getKeyword());
 
@@ -95,8 +97,6 @@ public class FreeController {
             model.addAttribute("user",memberBean);
             fb.setFree_nick(memberBean.getNick()); 
             fb.setFree_id(memberBean.getId()); 
-            System.out.println("멤버빈 닉네임: "+memberBean.getNick());
-            System.out.println("멤버빈 아이디: "+memberBean.getId());
             System.out.println("닉네임: "+fb.getFree_nick());
             System.out.println("아이디: "+fb.getFree_id());
         }
@@ -107,9 +107,28 @@ public class FreeController {
     // 작성
     @RequestMapping("freeWriteResult.do")
     public String freeWriteResult(@ModelAttribute FreeBean fb,
-	          HttpServletRequest request, Model model) throws Exception {
+    		@RequestParam("free_filename1") MultipartFile mf,
+    		HttpServletRequest request, Model model) throws Exception {
         System.out.println("freeWriteResult");
         System.out.println("tag: "+fb.getFree_tag());
+        
+        // 파일 업로드 처리
+        if (!mf.isEmpty()) {
+            String uploadPath = request.getRealPath("upload"); // 업로드 디렉토리 경로를 설정합니다
+
+            System.out.println("path: " + uploadPath);
+
+            // UUID를 사용하여 고유한 파일명 생성
+            String originalFilename = mf.getOriginalFilename();
+            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            String newFilename = UUID.randomUUID().toString() + extension;
+
+            // 파일을 업로드 디렉토리에 저장합니다
+            String filePath = uploadPath + File.separator + newFilename;
+            mf.transferTo(new File(filePath));
+
+            fb.setFree_filename(newFilename);
+        }
         int result = freeService.freeInsert(fb);
         model.addAttribute("result", result);
 
@@ -123,7 +142,6 @@ public class FreeController {
 			HttpServletResponse response,
 			HttpSession session, Model model) throws Exception {
 		FreeBean freeBean = freeService.numSelect(num);
-		System.out.println("저장아이디="+freeBean.getFree_id());
 		model.addAttribute("freeBean", freeBean);
 		model.addAttribute("pageNum", pageNum);
 
@@ -152,11 +170,29 @@ public class FreeController {
 	// 수정
 	@RequestMapping("freeUpdateResult.do")
 	public String freeUpdateResult(@ModelAttribute FreeBean fb, String pageNum,
+			  @RequestParam("free_filename1") MultipartFile mf,
 	          HttpServletRequest request, Model model) throws Exception {
+		  // 파일 업로드 처리
+        if (!mf.isEmpty()) {
+            String uploadPath = request.getRealPath("upload"); // 업로드 디렉토리 경로를 설정합니다
+
+            System.out.println("path: " + uploadPath);
+
+            // UUID를 사용하여 고유한 파일명 생성
+            String originalFilename = mf.getOriginalFilename();
+            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            String newFilename = UUID.randomUUID().toString() + extension;
+
+            // 파일을 업로드 디렉토리에 저장합니다
+            String filePath = uploadPath + File.separator + newFilename;
+            mf.transferTo(new File(filePath));
+
+            fb.setFree_filename(newFilename);
+        }
+		
 		int result = freeService.freeUpdate(fb);
 		model.addAttribute("result", result);
 		model.addAttribute("pageNum", pageNum);
-		System.out.println(fb.getFree_title());
 		System.out.println(result);
 		return "free/freeUpdateResult";
 	}
@@ -166,63 +202,71 @@ public class FreeController {
 	public String freeDelete(@ModelAttribute FreeBean fb, int num, String pageNum,
 			HttpServletResponse response,
 			HttpSession session, Model model) throws Exception {
-		FreeBean freeBean = freeService.numSelect(num);
+		FreeBean freeBean = freeService.numSelect(num); 
 		model.addAttribute("freeBean", freeBean);
-		model.addAttribute("pageNum", pageNum);
 		System.out.println("freeDelete");
-
-		 //로그인 상태 확인
-        if (session.getAttribute("id") == null) {
-            // 비로그인 상태일 경우 로그인 폼으로 이동
-            return "redirect:MemberLogin.do";
-        } else if (session.getAttribute("id").equals(fb.getFree_id())) {
-        	System.out.println("로그인 확인");
-            // 유저 정보 가져오기
-        	String id = (String)session.getAttribute("id");
-            MemberBean memberBean = memberService.checkLogin(id);
-            model.addAttribute("user",memberBean);
-            System.out.println(id);
-            System.out.println(fb.getFree_id());
-            fb.setFree_id(memberBean.getId()); 
-        } else {
-        	System.out.println("작성자가 아닙니다.");
-        	response.setContentType("text/html; charset=utf-8");
-             PrintWriter w = response.getWriter();
-             w.write("<script>alert('"+"작성자가 아닙니다."+"');history.go(-1);</script>");
-             w.flush();
-             w.close();
-             }
+		System.out.println("프리빈: "+freeBean);
+		System.out.println("fb.프리no: "+freeBean.getFree_no());
+		
+		//로그인 상태 확인
+		if (session.getAttribute("id") == null) {
+			// 비로그인 상태일 경우 로그인 폼으로 이동
+			return "redirect:MemberLogin.do";
+		} else if (session.getAttribute("id").equals(freeBean.getFree_id())) {
+			System.out.println("로그인 확인");
+			// 유저 정보 가져오기
+			String id = (String)session.getAttribute("id");
+			MemberBean memberBean = memberService.checkLogin(id);
+			model.addAttribute("user",memberBean);
+			System.out.println("세션: "+id);
+			System.out.println("프리빈: "+freeBean.getFree_id());
+		} else {
+			String id = (String)session.getAttribute("id");
+			System.out.println("세션: "+id);
+			System.out.println("프리빈: "+freeBean.getFree_id());
+			System.out.println("작성자가 아닙니다.");
+			response.setContentType("text/html; charset=utf-8");
+			PrintWriter w = response.getWriter();
+			w.write("<script>alert('"+"작성자가 아닙니다."+"');history.go(-1);</script>");
+			w.flush();
+			w.close();
+		}
 		return "free/freeDelete";
 	}
-
+	
 	// 삭제
 	@RequestMapping("freeDeleteResult.do")
-	public String freeDeleteResult(int num, String pageNum, Model model) throws Exception {
+	public String freeDeleteResult(@ModelAttribute FreeBean fb, String pageNum,
+	          HttpServletRequest request, Model model) throws Exception {
 		System.out.println("freeDeleteResult");
-		int result = freeService.freeDelete(num);
+		int result = freeService.freeDelete(fb);
 		model.addAttribute("result", result);
 		model.addAttribute("pageNum", pageNum);
+		System.out.println(result);
 		return "free/freeDeleteResult";
 	}
 	
 	@RequestMapping("freeLikeUpdate.do")
 	public String freeLike(int num, String pageNum, Model model) {
-		System.out.println("num:"+ num);
-		System.out.println("pageNum:"+ pageNum);
-		
+		System.out.println("num:" + num);
+		System.out.println("pageNum:" + pageNum);
+
 		int result = freeService.freeLikeUpdate(num);
-		if(result == 1) System.out.println("좋아요 증가");
+		if (result == 1)
+			System.out.println("좋아요 증가");
+
 		return "redirect:freeContent.do?num="+num+"&pageNum="+pageNum;
 	}
-	
+
 	@RequestMapping("freeDislikeUpdate.do")
 	public String freeDislikeUpdate(int num, String pageNum, Model model) {
-		System.out.println("num:"+ num);
-		System.out.println("pageNum:"+ pageNum);
-		
+		System.out.println("num:" + num);
+		System.out.println("pageNum:" + pageNum);
+
 		int result = freeService.freeDislikeUpdate(num);
-		if(result == 1) System.out.println(" 싫어요 증가");
-		
+		if (result == 1)
+			System.out.println(" 싫어요 증가");
+
 		return "redirect:freeContent.do?num="+num+"&pageNum="+pageNum;
 	}
 }

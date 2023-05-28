@@ -47,11 +47,8 @@
 *{
         font-family: 'Title_Medium';
         font-weight: lighter;
-        witdh: 100%;
+        width: 100%;
     }
-h2 {
-	margin: 40px 0;
-}
 </style>
 
 

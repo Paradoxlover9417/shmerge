@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbns">
+	<!-- Use type aliases to avoid typing the full classname every time. -->
+<!-- 	<resultMap id="rbResult"          type="rb">
+		<result property="rno"	      column="freereply_no" />
+		<result property="bno"    	  column="free_no" />
+		<result property="replytext"  column="freereply_content" />
+		<result property="replyer"    column="freereply_id" />
+		<result property="regdate"    column="freereply_date" />
+	</resultMap> -->
+	
+<!-- 	<select id="replist" parameterType="int" resultMap="rbResult">
+		select * from free_reply where bno=#{bno} order by rno
+	</select> -->
+	<select id="list" parameterType="int" resultType="rb">
+		select * from free_reply where free_no=#{bno} order by freereply_no desc
+	</select>
+	
+	<insert id="insert" parameterType="rb">
+		<selectKey keyProperty="freereply_no" order="BEFORE" resultType="int">
+			select nvl(max(freereply_no),0) + 1 from free_reply
+		</selectKey>
+		insert into free_reply values (#{freereply_no},#{free_no},#{freereply_id},
+		#{freereply_nick}, #{freereply_content}, sysdate)
+	</insert>
+	
+	<update id="update" parameterType="rb">
+		update free_reply set freereply_content=#{freereply_content},
+			freereply_date=sysdate where freereply_no=#{freereply_no} 
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		delete from free_reply where freereply_no=#{rno}
+	</delete>
+</mapper>

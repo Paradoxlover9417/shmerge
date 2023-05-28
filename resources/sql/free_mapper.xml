@@ -2,11 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="freens">
-	<insert id="freeInsert" parameterType="free">
+
+		<insert id="freeInsert" parameterType="free">
 		insert into free
-		(free_no,free_id,free_nick,free_title,free_content,free_tag,free_hit,free_like,free_dislike,free_category,free_date,free_filename)
+		(free_no,free_id,free_nick,free_title,free_content,free_tag,
+		free_hit,free_like,free_dislike,free_category,free_date,free_filename)
 		values
-		(free_seq.nextval,#{free_id},#{free_nick},#{free_title},#{free_content},#{free_tag},0,0,0,#{free_category},sysdate,#{free_filename, jdbcType=VARCHAR})
+		(free_seq.nextval,#{free_id},#{free_nick},#{free_title},#{free_content},#{free_tag},
+		0,0,0,#{free_category},sysdate,#{free_filename, jdbcType=VARCHAR})
 
 	</insert>
 	
@@ -18,10 +21,12 @@
 		select * from free where free_no=#{free_no}
 	</select>
 	
-	<update id="freeUpdate" parameterType="free">
+
+<update id="freeUpdate" parameterType="free">
 		update free set
 		free_title=#{free_title},free_content=#{free_content},free_tag=#{free_tag},
-		free_category=#{free_category},free_filename=#{free_filename}
+		free_category=#{free_category},free_filename=#{free_filename, jdbcType=VARCHAR}
+
 		where free_no=#{free_no}
 	</update>
 
@@ -45,9 +50,9 @@
 		</where>
 	</select>
 
-	<select id="list"
-		parameterType="org.example.goSeoul.model.FreeBean"
-		resultType="org.example.goSeoul.model.FreeBean">
+
+	<select id="list" parameterType="free" resultType="free">
+
 		select * from (select a.*,rowNum rn from (
 		select * from free
 		<where>

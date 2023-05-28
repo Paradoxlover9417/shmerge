@@ -116,15 +116,13 @@ li {
 <body>
 <c:import url="../header.jsp" />
 	<br><h4 class="mb-3" align="center">여행정보 공유</h4>
-	<form method="post" action="freeWriteResult.do" >
+	<form method="post" action="freeWriteResult.do" enctype="multipart/form-data">
 		<div class="container" style="width: auto; height: auto;">
 			<div
 				style="width: 100%; height: auto; margin: 50px auto; background-color: white; border-radius: 10px;">
 
 				<input type="hidden" name="free_id" value="${freeBean.free_id}">
 				<input type="hidden" name="free_nick" value="${freeBean.free_nick}">
-				<input type="hidden" name="free_like" value="${freeBean.free_like}">
-				<input type="hidden" name="free_dislike" value="${freeBean.free_dislike}">
 
 				<div class="form-group row">
 					<label for="free_category" class="col-sm-2 col-form-label">카테고리</label>
@@ -142,7 +140,7 @@ li {
 						파일</label>
 					<div class="col-sm-4">
 						<input class="form-control" type="file" id="free_filename"
-							name="free_filename">
+							name="free_filename1" multiple="multiple">
 					</div>
 				</div>
 

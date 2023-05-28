@@ -94,16 +94,6 @@ label {
 	font-weight: bold;
 }
 
-ul {
-	list-style-type: '#';
-	padding-inline-start: 1ch;
-}
-
-li {
-	float: left;
-	margin-right: 25px;
-}
-
 .write-btn {
 	text-align: center;
 }
@@ -117,12 +107,11 @@ li {
 <body>
 <c:import url="../header.jsp" />
 	<br><h4 class="mb-3" align="center">여행정보 수정</h4>
-	<form method="post" action="freeUpdateResult.do" >
+	<form method="post" action="freeUpdateResult.do" enctype="multipart/form-data" >
 		<div class="container" style="width: auto; height: auto;">
 			<div
 				style="width: 100%; height: auto; margin: 50px auto; background-color: white; border-radius: 10px;">
 
-				<input type="hidden" name="free_id" value="${freeBean.free_id}"> 
 				<input type="hidden" name="free_no" value="${freeBean.free_no}"> 
 				<input type="hidden" name="pageNum" value="${pageNum}">	
 
@@ -143,10 +132,9 @@ li {
 						파일</label>
 					<div class="col-sm-4">
 						<input class="form-control" type="file" id="free_filename"
-							name="free_filename" >
+							name="free_filename1"  multiple="multiple">
 					</div>
 				</div>
-
 				<hr>
 
 				<div class="form-group">

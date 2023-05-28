@@ -86,7 +86,7 @@ img {
 			<div id="playtime"></div><br>
 			<div id="usetimefestival"></div><br>
 			<div id="map" style="max-width:800px; width:100%; height:400px;"></div> 
-				<div style="max-width:600px; justify-items:center;"><br>
+				<div style="text-align:center;"><br>
 					<div id="address"></div>
 					<div id="eventplace"></div><br>
 				</div>
@@ -94,6 +94,7 @@ img {
 	</div>
 <script>
  
+ // URL에서 contentId값 받아오기
 function getParam(sname) {
     var params = location.search.substr(location.search.indexOf("?") + 1);
     var sval = "";
@@ -115,7 +116,7 @@ function getParam(sname) {
 
     $(document).ready(function() {
       $.ajax({
-        /* URL에 API에서 가져온 주소값 입력 */
+        // URL에 API에서 가져온 주소값 입력
         url: "https://apis.data.go.kr/B551011/KorService1/detailCommon1?MobileOS=ETC&MobileApp=GoSeoul&_type=json&contentId="+contentId +"&contentTypeId=15&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&numOfRows=20&pageNo=1&serviceKey=9u1LYAg7hOW1YTn138et7L7Q8Qcks2RZvreM6YC011a5iHJrju%2BbgL%2FSP8uU1FE0d3k0K3fqzUuvSEWUu8xndg%3D%3D",
 		method : 'GET',
 		async:false,
@@ -129,7 +130,13 @@ function getParam(sname) {
           for (let i = 0; i < detail.length; i++) {
             let dt = detail[i];
             $("#title").text(dt.title);
+         // 이미지가 없을 경우 기본로고 표시
+            if (dt.firstimage !== "") {
             $("<img>").attr("src", dt.firstimage).appendTo("#thumb");
+			} else {
+			$("<img>").attr("src", "./images/GoSeoul_Logo.jpg").appendTo("#thumb");
+			}
+         
             $("#overview").html(dt.overview);
          //  받아온 dt.homepage값에서 순수 url만 추출하는 코드
          	const text = dt.homepage;
@@ -166,7 +173,7 @@ function getParam(sname) {
 	});
      
       $.ajax({
-          /* URL에 API에서 가져온 주소값 입력 */
+          // URL에 API에서 가져온 주소값 입력
           url: "https://apis.data.go.kr/B551011/KorService1/detailIntro1?MobileOS=etc&MobileApp=goSeoul&_type=json&contentId="+contentId +"&contentTypeId=15&numOfRows=200&pageNo=1&serviceKey=9u1LYAg7hOW1YTn138et7L7Q8Qcks2RZvreM6YC011a5iHJrju%2BbgL%2FSP8uU1FE0d3k0K3fqzUuvSEWUu8xndg%3D%3D",
   		method : 'GET',
   		async:false,

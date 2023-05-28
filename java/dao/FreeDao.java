@@ -37,9 +37,9 @@ public class FreeDao {
 	}
 	
 	// 글 식제
-	public int freeDelete(int num) {
+	public int freeDelete(FreeBean fb) {
 		System.out.println("FreeDao_freeDelete");
-		return sqlSession.delete("freeDelete", num);
+		return sqlSession.delete("freeDelete", fb);
 	}
 
 	public int getTotal(FreeBean fb) {
@@ -53,10 +53,10 @@ public class FreeDao {
 		 * hm.put("startRow",startRow); 
 		 * hm.put("endRow",endRow);
 		 */ 
-		return sqlSession.selectList("list", fb);
+		return sqlSession.selectList("freens.list", fb);
 	}
 	
-	public int freeLikeUpdate(int free_no) {
+ 	public int freeLikeUpdate(int free_no) {
  		return sqlSession.update("freens.freeLikeUpdate", free_no);
  	}
  	public int freeDislikeUpdate(int free_no) {

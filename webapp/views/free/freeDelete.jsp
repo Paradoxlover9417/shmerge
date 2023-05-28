@@ -32,14 +32,9 @@ label {
 	font-weight: bold;
 }
 
-ul {
-	list-style-type: '#';
-	padding-inline-start: 1ch;
-}
-
-li {
-	float: left;
-	margin-right: 25px;
+.warning {
+  color: red;
+  text-align: center;
 }
 
 .write-btn {
@@ -50,50 +45,23 @@ li {
 	display: inline-block;
 }
 </style>
-
-
-<script>
-
-var freeId = ${freeBean.free_id};
-
-function idCheck() {
-	if ( id != freeId ) {
-		alert("작성자가 아닙니다.");
-		history.go(-1);
-		return false;
-	}
-}
-function removeCheck() {
- if (confirm("정말 삭제하시겠습니까??") == true){    //확인
-     document.removeCheck.submit();
- }else{   //취소
-     return false;
- }
-}
-
-
-</script>
-	
 	
 </head>
 
 <body>
 <c:import url="../header.jsp" />
 	<br><h4 class="mb-3" align="center">여행정보 삭제</h4>
-	<form method="post" action="freeDeleteResult.do" onsubmit="return idCheck()" >
+	<form method="post" action="freeDeleteResult.do">
 		<div class="container" style="width: auto; height: auto;">
 			<div
 				style="width: 100%; height: auto; margin: 50px auto; background-color: white; border-radius: 10px;">
-
-				<input type="hidden" name="free_nick" value="${freeBean.free_nick}">
-				<input type="hidden" name="free_id" value="${freeBean.free_id}"> 
-				<input type="hidden" name="num" value="${freeBean.free_no}"> 
-				<input type="hidden" name="pageNum" value="${pageNum}">	
-
+		<input type="hidden" name="free_no" value="${freeBean.free_no}"> 
+		<input type="hidden" name="pageNum" value="${pageNum}">	
+				<div class="warning"><h5>해당 글과 작성된 댓글이 모두 삭제됩니다. 삭제하시겠습니까?</h5></div><br>
 				<div class="write-btn">
-					<button type="submit" class="btn btn-outline-primary write-btn1">삭제</button>
-					  <input id="tblbutton" type="button" value="글삭제하기" onclick="removeCheck()">
-					<button type="reset" class="btn btn-outline-secondary write-btn1">취소</button>
+					<button type="submit" class="btn btn-outline-primary write-btn1">네</button>
+					<a href="freeContent.do?num=${freeBean.free_no}&pageNum=${pageNum}"
+					class="btn btn-outline-secondary write-btn1">아니요</a>
 				</div>
 
 			</div>
