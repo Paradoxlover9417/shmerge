@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <!--configuration settings-->
+    <typeAliases>
+        <typeAlias alias="member" type="org.example.goSeoul.model.MemberBean"/>
+        <typeAlias alias="free" type="org.example.goSeoul.model.FreeBean"/>
+        <typeAlias alias="with" type="org.example.goSeoul.model.WithBean"/>
+        <typeAlias alias="withreply" type="org.example.goSeoul.model.WithReplyBean"/>
+        <typeAlias alias="reserve" type="org.example.goSeoul.model.ReserveBean"/>
+        <typeAlias alias="question" type="org.example.goSeoul.model.QuestionBean"/>
+    </typeAliases>
+
+</configuration>
